@@ -65,13 +65,40 @@ Refer to `./cache/prefix.txt`, prefixes look like those. Just the address part i
 ### Add cache prefix, append only:
 `vim ~/cachemeta/prefix.txt`
 ### Generate mappings from long prefixes to short ones:
-Go to `mytools/`, 
+Go to `./mytools/`, 
 Run: `py CacheManager.py genprefix`,
 This will generate `prefixTranslate.pkl` as a pickled dict. 
 
 
+---
+## Process a new state, after the above is prepared:
+`3genOsmCache.py` is the main code. Make sure you have Redis running on port 6380.
+For example, if you have 14 servers, you can run:
+```
+py 3genOsmCache.py gen_osm addr=Indiana,US max=14 s=0 t=10
+```
+For example, if you have 1 PC, and want to overwrite previously generated cache, you can run:
+```
+py 3genOsmCache.py gen_osm addr=Illinois,US max=1 s=0 t=1 o
+```
+Check out the code yourself. It takes a few days to crawl/query/process, use `screen` with `cssh` if necessary. 
+
+Tasks completion will generate mark files like `~/greendrive/osmdata/Illinois,US/COMPLETE-download_osm`. All cached mappings will be loaded into Redis on your PC or cluster. 
 
 
+---
+## Generate edge/turn costs:
+After all cache ready, generate fuel-related cost files for OSRM, run:
+`py genSpeedSegOSRM.py il fuel`
+See the bottom of the code, `il` is short for address `Illinois,US`, `fuel` means generate fuel-related cost files.
+
+---
+## Add docker for OSRM.
+To go `./docker/`. Run:
+```
+bash docker-back.sh Illinois,US 5001 
+bash docker-front.sh Illinois,US 5001 9966
+```
 
 
 
