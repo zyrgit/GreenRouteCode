@@ -1,0 +1,66 @@
+
+DirData = /home/zhao97/greendrive/proc
+DirRaw= /home/zhao97/greendrive/raw
+DirOSM = /home/zhao97/greendrive/osmdata
+
+UnknownUserEmail = Anonymous
+KeyAndroidId=AndroidId
+KeyBTaddr=BTaddr
+KeyOBDvid=OBDvid
+KeyUserName=UserName
+KeyUserEmail=UserEmail
+KeyUserAddress=UserAddress
+KeyCarMake=CarMake
+KeyCarModel=CarModel
+KeyCarYear=CarYear
+KeyCarClass=CarClass
+KeyCarExtra=CarExtra
+KeySysMs=SYSTEMMILLIS
+KeyGPSTime=GPSTime
+KeyGPSLat=GPSLatitude
+KeyGPSLng=GPSLongitude
+KeyGPSAccuracy=GPSAccuracy
+KeyGPSSpeed=GPSSpeed
+KeyGPSBearing=GPSBearing
+KeyElevation=GPSAltitude
+KeyGPSAltitude=GPSAltitude
+KeyThrottle=OBDThrottlePosition
+KeyRPM=OBDEngineRPM
+KeyCommandEqRatio=OBDCommandEqRatio
+KeyOBDSpeed=OBDSpeed
+KeyMAF=OBDMassAirFlow
+KeyTripID=TripID
+KeyGas=Gas
+KeyOriSysMs=OriSysMs
+
+CUT=~|
+EXT = .gz # file_extension 
+EQU:=
+
+kCutTraceTimeGap=10
+PrivacyDist = 0.1  # miles. 0.05 usually
+SpeedAsStop= 2.75 # m/s regard as stopped at cross. # should be ~3.0 m/s !!! !
+SpeedDecAsStop = 0.8 # spd dec by this is stopping. not in use.
+
+SpeedTagHigh=11.0 # primary,secondary..
+SpeedTagMedium=4.6 # residential..
+SpeedTagLow=2.45 # service..
+
+SpeedDiffThresh=2.5 # m/s used for self or verticle speed higher?
+SpeedTypeThresh=5.0 # m/s fast or slow roads?
+MinSegDistForMPG = 200 # meters when calc penalty.
+MinSegMpg = 12 # min mpg cost
+MaxSegMpg = 40 # max mpg cost
+MultiplySegMpg = 1.0 
+AddTurnPenalty = 0.2
+Car2ScaleFile = %s/car2scale-0515-0210.txt
+
+redis_port = 6380
+port=7784
+pathbeg=/html/
+
+RatioSegCostMpgComparedToKmh = 2.1265 # determined by the way osrm calc time cost using km/h 
+UTurnTimePenalty=30
+PoundPerGallon = 6.2
+GramPerGallon = 2834
+

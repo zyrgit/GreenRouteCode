@@ -1,0 +1,17 @@
+FROM osrm/osrm-backend:v5.20.0
+
+ARG addr
+ARG port
+ARG TurnPenaltyFile=turnpenalty-fuel19.txt
+ARG SegSpeedFile=segspeed-fuel19.txt
+
+ADD data/$SegSpeedFile /data/data/
+ADD data/$TurnPenaltyFile /data/data/
+ADD $addr.osm /data/
+WORKDIR /data/
+
+RUN osrm-extract -p /opt/car.lua /data/$addr.osm
+RUN osrm-contract /data/$addr.osm --segment-speed-file /data/data/$SegSpeedFile --turn-penalty-file /data/data/$TurnPenaltyFile
+
+EXPOSE $port
+
