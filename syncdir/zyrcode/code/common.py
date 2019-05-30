@@ -101,9 +101,6 @@ Car2ScaleFile= get_conf(configfile,"Car2ScaleFile")
 Car2ScaleFile= Car2ScaleFile%StatsDir
 try: 
 	carkey2scale=pickle.load(open(Car2ScaleFile,"rb")) 
-	for carkey in carkey2scale.keys():
-		if carkey in G_adjust_gas_scale_ratio:
-			carkey2scale[carkey]*=G_adjust_gas_scale_ratio[carkey]
 except: pass
 
 # ---------- Main Mem ----------
