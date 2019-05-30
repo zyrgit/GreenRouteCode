@@ -1,0 +1,276 @@
+
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- <title>start</title> -->
+<title>test</title>
+<!-- <title>end</title> -->
+<!--startcomment-->
+<!--endcomment-->
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"> </script>
+<script type="text/javascript">
+
+var map = null;
+var pathList = [];
+var path_markerList = [];
+var coordinates,paths;
+var pathCnt=0;
+var dashboard_icons=[];
+var color_list=[ // css style.
+'#7CFC00',// lawn green
+'#0000FF',// dark blue
+'#A52A2A',// dark brown
+'#DC143C',//dark red
+'#8A2BE2',//purple
+'#7FFFD4',// blue green
+'#FF1493',//pink
+'#00FFFF',// light blue
+'#FA8072',// salmon pink
+'#6B8E23',//gray green
+'#D2691E',//chocolate
+'#EE82EE',//light pink
+'#DAA520',//dark yellow
+'#7FFF00',// light green
+'#5F9EA0',//gray blue
+'#006400',//dark green
+'#BDB76B',//khaki
+'#6A5ACD',// purple blue
+'#8B008B',//purple red
+'#FF8C00',//orange
+'#8FBC8F',//gray green
+'#FFD700',//yellow
+'#FFE4E1',//light pink
+'#F0E68C',//light khaki
+'#808000',//olive green
+'#FF6347',//tomato
+];
+
+paths=[
+////startinsertlatlng1
+[
+new google.maps.LatLng(28.429631,-81.3059212),
+new google.maps.LatLng(28.4296321,-81.3061433),
+],
+[
+new google.maps.LatLng(28.429631,-81.3059212),
+new google.maps.LatLng(28.4296321,-81.3061433),
+],
+////endinsertlatlng1
+];
+
+var heat_markerList = [];
+var heat_latlng_list=[// lat,lng,heat_val
+////insertheatstart1
+[
+[{lat: 40.1137, lng: -88.2246},0.5],
+],
+[
+[{lat: 40.1039, lng: -88.2346},0.5],
+],
+////insertheatend1
+];
+function gen_icon(color){
+   return {
+    path: google.maps.SymbolPath.CIRCLE,
+    fillColor: color,
+    fillOpacity: .5,
+    scale: 6,
+    strokeColor: color,
+    strokeWeight: 1,
+    strokeOpacity: .1,
+  };
+}
+
+function initialize() {  
+  for(var i=0; i<color_list.length; i++){
+    var dashboard_icon = gen_icon(color_list[i]);
+    dashboard_icons.push(dashboard_icon);
+  }
+
+  var latlng = paths[0][0]; 
+  var myOptions = {
+    zoom: 12,
+    center: latlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    scaleControl: false,
+    streetViewControl: false,
+    rotateControl: true,
+    gestureHandling: 'greedy' // allow one finger move, otherwise scroll div...
+  };
+  map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+  bounds = new google.maps.LatLngBounds();
+  bound1 = paths[0][0];
+  bound3 = paths[0][paths[0].length-1];
+  if (paths[paths.length-1][0]) {
+    bound2 = paths[paths.length-1][0];
+    bound4 = paths[paths.length-1][paths[paths.length-1].length-1];
+    bounds.extend(bound2); 
+    bounds.extend(bound4);
+  }
+  bounds.extend(bound1); 
+  bounds.extend(bound3); 
+  map.fitBounds(bounds);
+  showShortestRoute(); 
+
+  for(var i=0; i<heat_latlng_list.length; i++){
+    heat_markerList[i]=[];
+    var dashboard_icon = dashboard_icons[3];
+
+    for(var j=0; j<heat_latlng_list[i].length; j++){
+
+      var val=heat_latlng_list[i][j][1];
+      dashboard_icon.fillOpacity=Math.max(0.04,Math.min(1, val));
+      var tmpmarker = new google.maps.Marker({
+        map: map,
+        clickable: false,
+        optimized: false,
+        animation: null,
+        icon: dashboard_icon,
+        position: heat_latlng_list[i][j][0],
+        draggable: false,
+        visible: true,
+      });
+      heat_markerList[i].push(tmpmarker);
+    }
+  }
+} 
+
+
+function showShortestRoute() {
+
+  pathCnt=paths.length;
+  var OnlyTwoMarkers=1;
+  var AImage="http://www.google.com/mapfiles/marker"+String.fromCharCode('A'.charCodeAt(0))+".png";
+  var BImage="http://www.google.com/mapfiles/marker"+String.fromCharCode('B'.charCodeAt(0))+".png";
+
+  for (var i = 0; i < pathCnt; i++) {
+      coordinates = paths[i];
+      pathList[i] = new google.maps.Polyline({
+        path: coordinates,
+        strokeColor: color_list[1],
+        // strokeColor: color_list[i%color_list.length],// for test 3 routes shown
+        strokeOpacity: 0.7, 
+        strokeWeight: 6
+      });
+      pathList[i].setMap(map);
+      var startImage="http://www.google.com/mapfiles/marker"+String.fromCharCode('A'.charCodeAt(0)+i%26)+".png";
+      markers=[];
+
+      var markersAllTheWay=0;
+      if (markersAllTheWay>0){
+        for (var j = coordinates.length - 1; j >= 0; j--) {
+          var startMarker = new google.maps.Marker({
+            position: coordinates[j],
+            map: map,
+            icon: startImage,
+          });
+          markers.push(startMarker);
+        }; 
+      }else{
+          if(OnlyTwoMarkers==0){
+              var startMarker = new google.maps.Marker({
+                position: coordinates[0],
+                map: map,
+                icon: startImage,
+              });
+              markers.push(startMarker);
+              startMarker = new google.maps.Marker({
+                position: coordinates[coordinates.length - 1],
+                map: map,
+                icon: dashboard_icons[i%dashboard_icons.length],
+              });
+              markers.push(startMarker);
+          }else if(OnlyTwoMarkers>0 && i==0){
+              var startMarker = new google.maps.Marker({
+                position: coordinates[0],
+                map: map,
+                icon: AImage,
+              });
+              markers.push(startMarker);
+              var startMarker = new google.maps.Marker({
+                position: coordinates[coordinates.length - 1],
+                map: map,
+                icon: BImage,
+              });
+              markers.push(startMarker);
+          }
+      }
+      if(OnlyTwoMarkers==0 || (OnlyTwoMarkers>0 && i==0)){
+        path_markerList[i]=markers;
+      }
+  };
+  
+//   var endImage = "http://www.google.com/mapfiles/markerZ.png";
+//   var endLatLng = new google.maps.LatLng(40.088701,-88.218932); // default here.
+// ///startinsertpt
+//   var endLatLng = new google.maps.LatLng(40.088701,-88.218932);
+// ///endinsertpt
+//   var endMarker = new google.maps.Marker({
+//   position: endLatLng,
+//   map: map,
+//   icon: endImage
+//   });
+}
+
+
+function set_checked_index (ind,checked) {
+  if (checked == true) {
+    pathList[ind].setMap(map); 
+    for (var i = path_markerList[ind].length - 1; i >= 0; i--) {
+      path_markerList[ind][i].setMap(map);
+    };
+    for (var i = heat_markerList[ind].length - 1; i >= 0; i--) {
+      heat_markerList[ind][i].setMap(map);
+    };
+  } else {
+    pathList[ind].setMap(null);
+    for (var i = path_markerList[ind].length - 1; i >= 0; i--) {
+      path_markerList[ind][i].setMap(null);
+    }; 
+    for (var i = heat_markerList[ind].length - 1; i >= 0; i--) {
+      heat_markerList[ind][i].setMap(null);
+    };
+  }
+}
+
+////startinsertlatlng2
+function check0() {
+  if (myform.chk0.checked == true) {
+    set_checked_index(0,true); }else{
+    set_checked_index(0,false);}}
+function check1() {
+  if (myform.chk1.checked == true) {
+    set_checked_index(1,true); }else{
+    set_checked_index(1,false);}}
+////endinsertlatlng2
+
+
+</script>
+
+</head>
+<body onload="initialize()" onunload="GUnload()">
+
+<form name="myform" action="" method=post>
+
+<div id="map_canvas" style="width: 87%; height: 100%; float:left;"></div>
+
+<div id="routeChoice" style="width: 12%; height: 100%; float:right;">
+
+
+<!-- ////startinsertlatlng3 -->
+<input name="chk0" type=checkbox checked onClick="check0()"> <b><span style="color:green">0</span></b> <br/>
+<input name="chk1" type=checkbox checked onClick="check1()"> <b><span style="color:green">1</span></b> <br/>
+<!-- ////endinsertlatlng3 -->
+
+
+<!-- ////startinsertlist -->
+<p>
+----
+</p>
+<!-- ////endinsertlist -->
+
+</div>
+
+</form>
+
+</body>
+</html>

@@ -12,6 +12,7 @@ addpath=mypydir+"/code"
 if addpath not in sys.path: sys.path.append(addpath)
 from common import *
 from costModule import *
+from osmutil import osmPipeline
 
 iprint = 2   
 My_Platform = get_platform() # "centos" means cluster 
