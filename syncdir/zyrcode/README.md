@@ -89,8 +89,9 @@ Tasks completion will generate mark files like `~/greendrive/osmdata/Illinois,US
 ---
 ## Generate edge/turn costs:
 After all cache ready, generate fuel-related cost files for OSRM, run:
-`py genSpeedSegOSRM.py il fuel`
-See the bottom of the code, `il` is short for address `Illinois,US`, `fuel` means generate fuel-related cost files.
+`py genSpeedSegOSRM.py il fuel`.
+
+See the bottom of the code, `il` is short for address `Illinois,US`, `fuel` means to generate fuel-related cost files.
 
 ---
 ## Add docker for OSRM.
@@ -107,6 +108,14 @@ Run frontend at port 9966 (currently I did not figure out how to use other ports
 ```
 bash docker-front.sh Illinois,US 5001 9966
 ```
+
+--
+## API for fuel-efficient routing:
+After the backend docker starts running, you can query the route between two GPS points, say from {'lat':40.098083, 'lng':-88.219134} to {'lat':40.0806, 'lng':-88.218833}, using:
+```
+curl "http://BackendIP:5001/route/v1/driving/-88.219134,40.098083;-88.218833,40.0806"
+```
+Read the OSRM documentation for more options and details at http://project-osrm.org/docs/v5.15.2/api/#route-service.
 
 
 
