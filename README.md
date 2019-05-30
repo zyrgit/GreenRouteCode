@@ -1,2 +1,2 @@
 # GreenRouteCode
-Code for GreenRoute. To run some of the code, put these folders under your home directory (~/). 
+Code for GreenRoute. To run some of the code, put all folders under your home directory (~/). 
