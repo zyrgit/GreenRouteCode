@@ -109,9 +109,9 @@ Run frontend at port 9966 (currently I did not figure out how to use other ports
 bash docker-front.sh Illinois,US 5001 9966
 ```
 
---
+---
 ## API for fuel-efficient routing:
-After the backend docker starts running, you can query the route between two GPS points, say from {'lat':40.098083, 'lng':-88.219134} to {'lat':40.0806, 'lng':-88.218833}, using:
+After the backend docker starts running, you can query the route between two GPS points, say from `{'lat':40.098083, 'lng':-88.219134}` to `{'lat':40.0806, 'lng':-88.218833}`, using:
 ```
 curl "http://BackendIP:5001/route/v1/driving/-88.219134,40.098083;-88.218833,40.0806"
 ```
