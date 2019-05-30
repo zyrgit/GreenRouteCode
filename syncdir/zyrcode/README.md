@@ -94,12 +94,19 @@ See the bottom of the code, `il` is short for address `Illinois,US`, `fuel` mean
 
 ---
 ## Add docker for OSRM.
-To go `./docker/`. Run:
+Docker for OSRM has both frontend and backend, although you only need backend if you do not need UI. Backend server listens on port 5000 by default, but different dockers (for different states) can use specific port like 5001, etc. Frontend server listens on 9966 port by default, and requests are sent to backend server.
+
+The backend needs OSM file, cost-files (`~/greendrive/osmdata/Illinois,US/data/*`) as input. 
+To run shell script for backend docker, you also need to write a `./docker/Dockerfile_Illinois,US` configuration file. 
+
+Go to `./docker/`. Run backend at port 5001:
 ```
 bash docker-back.sh Illinois,US 5001 
+```
+Run frontend at port 9966 (currently I did not figure out how to use other ports, let me know if you do):
+```
 bash docker-front.sh Illinois,US 5001 9966
 ```
-
 
 
 
